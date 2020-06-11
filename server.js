@@ -80,13 +80,13 @@ io.on('connection', (socket) => {
 		// we tell the client to execute 'updatechat' with 2 parameters
 		io.sockets.in(socket.room).emit('updatechat', data);
 		// chats[socket.room].push(data)
-		axios.post(`http://tcp.chrisdizenzo.com:4000/sql/comment`,{ 
-			message: data.text,
-			consumer_id: data.consumer_id,
-			chat_id: socket.room.slice(-1)
-		 })
-		  .then(response => response.status)
-		  .catch(err => console.warn(err));
+		// axios.post(`http://tcp.chrisdizenzo.com:4000/sql/comment`,{ 
+		// 	message: data.text,
+		// 	consumer_id: data.consumer_id,
+		// 	chat_id: socket.room.slice(-1)
+		//  })
+		//   .then(response => response.status)
+		//   .catch(err => console.warn(err));
 	});
 	
 	socket.on('switchRoom', (newroom) => {
@@ -96,9 +96,9 @@ io.on('connection', (socket) => {
 			rooms.push(newroom)
 			// chats[newroom] = []
 			console.log("Rooms is now: " + rooms)
-			axios.post(`http://tcp.chrisdizenzo.com:4000/sql/chat`,{ 
-			name: newroom,
-		 })
+		// 	axios.post(`http://tcp.chrisdizenzo.com:4000/sql/chat`,{ 
+		// 	name: newroom,
+		//  })
 		}
 		console.log(socket.display_name + " joined room: " + newroom + " and left room " + socket.room)
 		socket.leave(socket.room);
