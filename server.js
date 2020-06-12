@@ -33,15 +33,6 @@ var display_names = {};
 // rooms which are currently available in chat
 var rooms = ['Home'];
 // chats = {'Chat1':[]}
-client.query("SELECT * from chat", (err,result) =>{
-	console.log("What the heck?")
-	if (err){
-		console.log(err)
-	}else{
-		console.log("Rooms set to: " + result.rows)
-		rooms = result.rows
-	}
-})
 
 io.on('connection', (socket) => {
 
@@ -73,7 +64,7 @@ io.on('connection', (socket) => {
 		
 		socket.display_name = data.display_name
 		sendUserInfo(socket,data)
-		socket.emit('updaterooms', rooms);
+		sendRoomInfo(socket)
 	})
 	
 	socket.on('USERINFO', (data) =>{
@@ -105,7 +96,7 @@ io.on('connection', (socket) => {
 		if (data.consumer_id){
 			socket.consumer_id = data.consumer_id
 		}
-		socket.emit('updaterooms', rooms);
+		sendRoomInfo(socket)
 		sendUserInfo(socket,data)
 	})
 
@@ -172,6 +163,19 @@ sendUserInfo = function (socket,data){
 		}else{
 			console.log(result)
 			// socket.emit('USERINFO',result)
+		}
+	})
+}
+
+sendRoomInfo = function(socket){
+	client.query("SELECT * from chat", (err,result) =>{
+		console.log("What the heck?")
+		if (err){
+			console.log(err)
+		}else{
+			console.log("Rooms set to: " + result.rows)
+			rooms = result.rows
+			socket.emit('updaterooms', rooms);
 		}
 	})
 }
