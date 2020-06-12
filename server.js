@@ -33,9 +33,9 @@ var display_names = {};
 // rooms which are currently available in chat
 var rooms = ['Home'];
 // chats = {'Chat1':[]}
-client.query("SELECT * from chats", (err,result) =>{
+client.query("SELECT * from chat", (err,result) =>{
 	if (err){
-		// console.log(err)
+		console.log(err)
 	}else{
 		console.log("Rooms set to: " + result.rows)
 		rooms = result.rows
