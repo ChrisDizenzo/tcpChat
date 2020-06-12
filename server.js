@@ -75,8 +75,8 @@ io.on('connection', (socket) => {
 
 		var set = ''
 		Object.keys(data).forEach((o)=>{
-			set+=' ' + o+' = '
 			if (o.search('id') < 0){
+				set+=' ' + o+' = '
 				set += '\''+ data[o] + '\','
 			}
 		})
