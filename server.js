@@ -239,7 +239,7 @@ chatInsertQuery = function(newroom){
 	return q
 }
 chatPullQuery = function(data){
-	q = "SELECT * FROM comment WHERE chat_id IN (SELECT DISTINCT chat_id FROM chat WHERE name=\'" + data.room + "\')"
+	q = "SELECT * FROM comment WHERE chat_id IN (SELECT DISTINCT chat_id FROM chat WHERE name=\'" + data.newroom + "\')"
 	if (data.limit){
 		q+= " LIMIT " + data.limit
 	}
