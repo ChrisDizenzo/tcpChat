@@ -147,7 +147,7 @@ io.on('connection', (socket) => {
 sendUserInfo = function (socket,data){
 	q = "SELECT * FROM consumer WHERE "
 	if (data.consumer_id){
-		q+= "consumer_id = " + data.consumer_id + " AND "
+		q+= "consumer_id = \'" + data.consumer_id + "\' AND "
 	}
 	if (data.display_name){
 		q+= "display_name = \'" + data.display_name + "\' AND "
