@@ -158,6 +158,7 @@ sendUserInfo = function (socket,data){
 	
 	console.log(q)
 	client.query(q, (err,result) =>{
+		console.log("9999999999999999999999999999999999999999999999999")
 		if (err){
 			console.log(err)
 		}else{
@@ -173,7 +174,7 @@ sendRoomInfo = function(socket){
 		if (err){
 			console.log(err)
 		}else{
-			console.log("Rooms set to: " + result)
+			console.log("Rooms set to: " + result.rows)
 			rooms = result.rows
 			socket.emit('updaterooms', rooms);
 		}
