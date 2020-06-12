@@ -173,7 +173,7 @@ sendUserInfo = function (socket,data){
 }
 
 sendRoomInfo = function(socket){
-	client.query("SELECT * from chat", (err,result) =>{
+	client.query("SELECT name from chat", (err,result) =>{
 		console.log("What the heck?")
 		if (err){
 			console.log(err)
