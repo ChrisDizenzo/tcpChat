@@ -173,7 +173,7 @@ sendRoomInfo = function(socket){
 		if (err){
 			console.log(err)
 		}else{
-			console.log("Rooms set to: " + result.rows)
+			console.log("Rooms set to: " + result)
 			rooms = result.rows
 			socket.emit('updaterooms', rooms);
 		}
