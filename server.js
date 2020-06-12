@@ -157,10 +157,10 @@ sendUserInfo = function (socket,data){
 		q+= "consumer_id = " + data.consumer_id + " AND"
 	}
 	if (data.display_name){
-		q+= "display_name = " + data.display_name + " AND"
+		q+= "display_name = \'" + data.display_name + "\' AND"
 	}
 	if (data.color){
-		q+= "color = " + data.color + " AND"
+		q+= "color = \'" + data.color + "\' AND"
 	}
 	q = q.slice(0,-3) + "LIMIT 1"
 	
