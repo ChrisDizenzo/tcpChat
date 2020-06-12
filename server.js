@@ -44,36 +44,68 @@ client.query("SELECT * from chats", (err,result) =>{
 
 io.on('connection', (socket) => {
 
-	socket.on('USERINFO', (data) =>{
-			console.log("Name change to: " + JSON.stringify(data))
+	socket.on('USERINIT', (data) =>{
+		console.log("Name change to: " + JSON.stringify(data))
 
-			var set = ''
-			Object.keys(data).forEach((o)=>{
-				set+=' ' + o+' = '
-				if (o.search('id') < 0){
-					set += '\''+ data[o] + '\','
-				}
-			})
-			set = set.slice(0,-1)
-			q = "UPDATE consumer SET " + set
-
-			if (data.consumer_id){
-				q +=" WHERE consumer_id = " + data.consumer_id;
+		var into = ' ('
+		var values = '('
+		Object.keys(queryParameter).forEach((o)=>{
+			into+=o+','
+			if (o.search('id') > 0){
+				values += queryParameter[o] + ','
+			}else{
+				values += '\''+ queryParameter[o] + '\','
 			}
+		})
+		into = into.slice(0,-1) + ')'
+		values = values.slice(0,-1) + ')'
+		q = "INSERT INTO consumer" + into + " VALUES " + values;
+		
+		console.log(q)
+		client.query(q, (err,result) =>{
+			if (err){
+				console.log(err)
+			}else{
+				console.log(result)
+			}
+		})  
+		
+		socket.display_name = data.display_name
+		sendUserInfo(socket,data)
+		socket.emit('updaterooms', rooms);
+	})
+	
+	socket.on('USERINFO', (data) =>{
+		console.log("Name change to: " + JSON.stringify(data))
 
-			console.log(q)
-			client.query(q, (err,result) =>{
-				if (err){
-					console.log(err)
-				}else{
-					console.log(result)
-				}
-			}) 
+		var set = ''
+		Object.keys(data).forEach((o)=>{
+			set+=' ' + o+' = '
+			if (o.search('id') < 0){
+				set += '\''+ data[o] + '\','
+			}
+		})
+		set = set.slice(0,-1)
+		q = "UPDATE consumer SET " + set
+
+		if (data.consumer_id){
+			q +=" WHERE consumer_id = " + data.consumer_id;
+		}
+
+		console.log(q)
+		client.query(q, (err,result) =>{
+			if (err){
+				console.log(err)
+			}else{
+				console.log(result)
+			}
+		}) 
 		socket.display_name = data.display_name
 		if (data.consumer_id){
 			socket.consumer_id = data.consumer_id
 		}
 		socket.emit('updaterooms', rooms);
+		sendUserInfo(socket,data)
 	})
 
 	socket.on('sendChat', function (data) {
@@ -119,3 +151,26 @@ io.on('connection', (socket) => {
 	});
 });
 
+sendUserInfo = function (socket,data){
+	q = "SELECT * FROM consumer WHERE "
+	if (data.consumer_id){
+		q+= "consumer_id = " + data.consumer_id + " AND"
+	}
+	if (data.display_name){
+		q+= "display_name = " + data.display_name + " AND"
+	}
+	if (data.color){
+		q+= "color = " + data.color + " AND"
+	}
+	q = q.slice(0,-3) + "LIMIT 1"
+	
+	console.log(q)
+	client.query(q, (err,result) =>{
+		if (err){
+			console.log(err)
+		}else{
+			console.log(result)
+			// socket.emit('USERINFO',result)
+		}
+	})
+}
