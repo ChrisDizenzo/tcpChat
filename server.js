@@ -34,6 +34,7 @@ var display_names = {};
 var rooms = ['Home'];
 // chats = {'Chat1':[]}
 client.query("SELECT * from chat", (err,result) =>{
+	console.log("What the heck?")
 	if (err){
 		console.log(err)
 	}else{
