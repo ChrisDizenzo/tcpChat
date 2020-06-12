@@ -157,6 +157,7 @@ sendUserInfo = function (socket,data){
 	q = q.slice(0,-3) + "LIMIT 1"
 	
 	console.log(q)
+	console.log("9999999999999999999999999999999999999999999999999")
 	client.query(q, (err,result) =>{
 		console.log("9999999999999999999999999999999999999999999999999")
 		if (err){
