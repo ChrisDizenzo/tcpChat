@@ -251,7 +251,7 @@ chatPullQuery = function(data){
 	return q
 }
 chatQuery = function(newroom){
-	q = "SELECT DISTINCT chat_id FROM chat WHERE name=\'" + newroom + "\')"
+	q = "SELECT DISTINCT chat_id FROM chat WHERE name=\'" + newroom + "\'"
 	console.log(q)
 	return q
 }
