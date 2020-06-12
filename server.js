@@ -84,6 +84,7 @@ io.on('connection', (socket) => {
 		q = "UPDATE consumer SET " + set
 
 		if (data.consumer_id){
+			console.log("999999999999999999999999999999999999999999 "  + data.consumer_id)
 			q +=" WHERE consumer_id = " + data.consumer_id;
 		}
 
@@ -148,12 +149,13 @@ sendUserInfo = function (socket,data){
 	q = "SELECT * FROM consumer WHERE "
 	if (data.consumer_id){
 		q+= "consumer_id = \'" + data.consumer_id + "\' AND "
-	}
-	if (data.display_name){
-		q+= "display_name = \'" + data.display_name + "\' AND "
-	}
-	if (data.color){
-		q+= "color = \'" + data.color + "\' AND "
+	}else{
+		if (data.display_name){
+			q+= "display_name = \'" + data.display_name + "\' AND "
+		}
+		if (data.color){
+			q+= "color = \'" + data.color + "\' AND "
+		}
 	}
 	q = q.slice(0,-4) + "LIMIT 1;"
 	
