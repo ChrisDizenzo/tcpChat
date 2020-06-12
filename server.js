@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
 			if (err){
 				console.log(err)
 			}else{
-				console.log(result)
+				console.log(result.rows)
 			}
 		})  
 		
@@ -94,7 +94,7 @@ io.on('connection', (socket) => {
 			if (err){
 				console.log(err)
 			}else{
-				console.log(result)
+				console.log(result.rows)
 			}
 		}) 
 		socket.display_name = data.display_name
@@ -162,13 +162,11 @@ sendUserInfo = function (socket,data){
 	q = q.slice(0,-4) + "LIMIT 1;"
 	
 	console.log(q)
-	console.log("9999999999999999999999999999999999999999999999999")
 	client.query(q, (err,result) =>{
-		console.log("9999999999999999999999999999999999999999999999999")
 		if (err){
 			console.log(err)
 		}else{
-			console.log(result)
+			console.log(result.rows)
 			// socket.emit('USERINFO',result)
 		}
 	})
