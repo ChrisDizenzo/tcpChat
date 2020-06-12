@@ -105,8 +105,7 @@ io.on('connection', (socket) => {
 		console.log(socket.display_name + " said to room " + socket.room + ": " + data)
 		// we tell the client to execute 'updatechat' with 2 parameters
 
-
-		client.query(commentInsertQuery(data),(err,result) =>{
+		client.query(commentInsertQuery({message: data.text, consumer_id: data.consumer_id, chat_id: socket.chat_id}),(err,result) =>{
 			if (err){
 				console.log(err)
 			}else{
@@ -120,11 +119,12 @@ io.on('connection', (socket) => {
 			console.log("Rooms is: " + rooms)
 			console.log("Adding room: " + newroom)
 			rooms.push(newroom)
-			// chats[newroom] = []
 			console.log("Rooms is now: " + rooms)
-		// 	axios.post(`http://tcp.chrisdizenzo.com:4000/sql/chat`,{ 
-		// 	name: newroom,
-		//  })
+			client.query(chatInsertQuery(newroom),(err, result)=>{
+				if (err){
+					console.log(err)
+				}
+			})
 		}
 		console.log(socket.display_name + " joined room: " + newroom + " and left room " + socket.room)
 		socket.leave(socket.room);
@@ -136,6 +136,14 @@ io.on('connection', (socket) => {
 			limit: 20,
 			newroom: newroom
 		}
+		
+		client.query(chatQuery(newroom),(err, result)=>{
+			if (err){
+				console.log(err)
+			}else{
+				socket.chat_id = result.rows[0].chat_id
+			}
+		})
 		client.query(chatPullQuery(newroom),(err, result)=>{
 			if (err){
 				console.log(err)
@@ -212,8 +220,25 @@ commentInsertQuery = function(data){
 	console.log(q)
 	return q
 }
+chatInsertQuery = function(newroom){
+	var into = ' ('
+	var values = '('
+	Object.keys(data).forEach((o)=>{
+		into+=o+','
+		if (o.search('id') > 0){
+			values += data[o] + ','
+		}else{
+			values += '\''+ data[o] + '\','
+		}
+	})
+	into = into.slice(0,-1) + ')'
+	values = values.slice(0,-1) + ')'
+	q = "INSERT INTO chat (name) VALUES (\'" + values + "\')";
+	console.log(q)
+	return q
+}
 chatPullQuery = function(data){
-	q = "SELECT * FROM comment WHERE chat_id IN (SELECT DISTINCT chat_id FROM chat WHERE name=\'" + data.newroom + "\')"
+	q = "SELECT * FROM comment WHERE chat_id IN (SELECT DISTINCT chat_id FROM chat WHERE name=\'" + data.room + "\')"
 	if (data.limit){
 		q+= " LIMIT " + data.limit
 	}
@@ -221,6 +246,11 @@ chatPullQuery = function(data){
 		q+= " OFFSET " + data.offset
 	}
 	q+= " ORDER BY comment_id DESC"	
+	console.log(q)
+	return q
+}
+chatQuery = function(newroom){
+	q = "SELECT DISTINCT chat_id FROM chat WHERE name=\'" + newroom + "\')"
 	console.log(q)
 	return q
 }
