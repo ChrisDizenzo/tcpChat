@@ -240,13 +240,13 @@ chatInsertQuery = function(newroom){
 }
 chatPullQuery = function(data){
 	q = "SELECT * FROM comment WHERE chat_id IN (SELECT DISTINCT chat_id FROM chat WHERE name=\'" + data.newroom + "\')"
+	q+= " ORDER BY comment_id DESC"	
 	if (data.limit){
 		q+= " LIMIT " + data.limit
 	}
 	if (data.offset){
 		q+= " OFFSET " + data.offset
 	}
-	q+= " ORDER BY comment_id DESC"	
 	console.log(q)
 	return q
 }
