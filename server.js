@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
 			if (err){
 				console.log(err)
 			}else{
-				console.log(result.rows)
+				console.log(JSON.stringify(result.rows))
 			}
 		})  
 		
@@ -94,7 +94,7 @@ io.on('connection', (socket) => {
 			if (err){
 				console.log(err)
 			}else{
-				console.log(result.rows)
+				console.log(JSON.stringify(result.rows))
 			}
 		}) 
 		socket.display_name = data.display_name
@@ -166,7 +166,7 @@ sendUserInfo = function (socket,data){
 		if (err){
 			console.log(err)
 		}else{
-			console.log(result.rows)
+			console.log(JSON.stringify(result.rows))
 			// socket.emit('USERINFO',result)
 		}
 	})
@@ -178,7 +178,7 @@ sendRoomInfo = function(socket){
 		if (err){
 			console.log(err)
 		}else{
-			console.log("Rooms set to: " + result.rows)
+			console.log("Rooms set to: " +JSON.stringify(result.rows))
 			rooms = result.rows
 			socket.emit('updaterooms', rooms);
 		}
