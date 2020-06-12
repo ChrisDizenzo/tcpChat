@@ -210,6 +210,7 @@ commentInsertQuery = function(data){
 	values = values.slice(0,-1) + ')'
 	q = "INSERT INTO comment" + into + " VALUES " + values;
 	console.log(q)
+	return q
 }
 chatPullQuery = function(data){
 	q = "SELECT * FROM comment WHERE chat_id IN (SELECT DISTINCT chat_id FROM chat WHERE name=\'" + data.newroom + "\')"
@@ -221,4 +222,5 @@ chatPullQuery = function(data){
 	}
 	q+= " ORDER BY comment_id DESC"	
 	console.log(q)
+	return q
 }
