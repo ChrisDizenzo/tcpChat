@@ -15,6 +15,11 @@ const client = new Client({
     port: 5432,
     database: "chatter"
 })
+client.connect()
+.then(()=>{
+    console.log("Connected Successfuly to postgres classcards database")
+})
+.catch((e)=>console.log(e))
 
 app.use(express.json())
 
