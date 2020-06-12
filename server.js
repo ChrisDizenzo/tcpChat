@@ -105,7 +105,7 @@ io.on('connection', (socket) => {
 		console.log(socket.display_name + " said to room " + socket.room + ": " + data)
 		// we tell the client to execute 'updatechat' with 2 parameters
 
-		client.query(commentInsertQuery({message: data.text, consumer_id: data.consumer_id, chat_id: socket.chat_id}),(err,result) =>{
+		client.query(commentInsertQuery({message: data.text, consumer_id: data.consumer_id, chat_id: socket.chat_id,color: data.color}),(err,result) =>{
 			if (err){
 				console.log(err)
 			}else{

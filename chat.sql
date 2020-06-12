@@ -22,6 +22,7 @@ CREATE TABLE "comment"
 (
  "comment_id"   serial NOT NULL,
  "message"      varchar(400) NOT NULL,
+ "color"      varchar(50) NOT NULL,
  "consumer_id"      integer NOT NULL,
  "time_created" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
  "chat_id"      integer NOT NULL,
