@@ -84,7 +84,6 @@ io.on('connection', (socket) => {
 		q = "UPDATE consumer SET " + set
 
 		if (data.consumer_id){
-			console.log("999999999999999999999999999999999999999999 "  + data.consumer_id)
 			q +=" WHERE consumer_id = " + data.consumer_id;
 		}
 
@@ -105,15 +104,15 @@ io.on('connection', (socket) => {
 	socket.on('sendChat', function (data) {
 		console.log(socket.display_name + " said to room " + socket.room + ": " + data)
 		// we tell the client to execute 'updatechat' with 2 parameters
-		io.sockets.in(socket.room).emit('updatechat', data);
-		// chats[socket.room].push(data)
-		// axios.post(`http://tcp.chrisdizenzo.com:4000/sql/comment`,{ 
-		// 	message: data.text,
-		// 	consumer_id: data.consumer_id,
-		// 	chat_id: socket.room.slice(-1)
-		//  })
-		//   .then(response => response.status)
-		//   .catch(err => console.warn(err));
+
+
+		client.query(commentInsertQuery(data),(err,result) =>{
+			if (err){
+				console.log(err)
+			}else{
+				io.sockets.in(socket.room).emit('updatechat', result.rows);
+			}
+		})
 	});
 	
 	socket.on('switchRoom', (newroom) => {
@@ -132,7 +131,18 @@ io.on('connection', (socket) => {
 		socket.join(newroom);
 		// socket.emit('updatechat' , 'Server' , 'you connected to ' + newroom)
 		socket.room = newroom;
-		socket.broadcast.to(newroom).emit('updatechat', {text: String(socket.display_name + " has just Joined!"), color: 'bg-blue-500', time: moment()});
+		socket.broadcast.to(newroom).emit('updatechat', [{text: String(socket.display_name + " has just Joined!"), color: 'bg-blue-500', time: moment()}]);
+		var temp = {
+			limit: 20,
+			newroom: newroom
+		}
+		client.query(chatPullQuery(newroom),(err, result)=>{
+			if (err){
+				console.log(err)
+			}else{
+				socket.emit('updatechat' , result.rows)
+			}
+		})
 		socket.emit('updaterooms', rooms);
 	})
 
@@ -184,4 +194,31 @@ sendRoomInfo = function(socket){
 			socket.emit('updaterooms', rooms);
 		}
 	})
+}
+commentInsertQuery = function(data){
+	var into = ' ('
+	var values = '('
+	Object.keys(data).forEach((o)=>{
+		into+=o+','
+		if (o.search('id') > 0){
+			values += data[o] + ','
+		}else{
+			values += '\''+ data[o] + '\','
+		}
+	})
+	into = into.slice(0,-1) + ')'
+	values = values.slice(0,-1) + ')'
+	q = "INSERT INTO comment" + into + " VALUES " + values;
+	console.log(q)
+}
+chatPullQuery = function(data){
+	q = "SELECT * FROM comment WHERE chat_id IN (SELECT DISTINCT chat_id FROM chat WHERE name=\'" + data.newroom + "\')"
+	if (data.limit){
+		q+= " LIMIT " + data.limit
+	}
+	if (data.offset){
+		q+= " OFFSET " + data.offset
+	}
+	q+= " ORDER BY comment_id DESC"	
+	console.log(q)
 }
