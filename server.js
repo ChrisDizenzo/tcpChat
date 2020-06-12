@@ -62,8 +62,6 @@ io.on('connection', (socket) => {
 		client.query(q, (err,result) =>{
 			if (err){
 				console.log(err)
-			}else{
-				console.log(JSON.stringify(result.rows))
 			}
 		})  
 		
@@ -93,8 +91,6 @@ io.on('connection', (socket) => {
 		client.query(q, (err,result) =>{
 			if (err){
 				console.log(err)
-			}else{
-				console.log(JSON.stringify(result.rows))
 			}
 		}) 
 		socket.display_name = data.display_name
@@ -166,20 +162,23 @@ sendUserInfo = function (socket,data){
 		if (err){
 			console.log(err)
 		}else{
-			console.log(JSON.stringify(result.rows))
-			// socket.emit('USERINFO',result)
+			console.log('User info sent: ' + JSON.stringify(result.rows))
+			socket.emit('USERINFO',result.rows[0])
 		}
 	})
 }
 
 sendRoomInfo = function(socket){
-	client.query("SELECT name from chat", (err,result) =>{
+	client.query("SELECT * from chat", (err,result) =>{
 		console.log("What the heck?")
 		if (err){
 			console.log(err)
 		}else{
 			console.log("Rooms set to: " +JSON.stringify(result.rows))
-			rooms = result.rows
+			rooms = []
+			result.rows.forEach((u=>{
+				rooms.push(u.name)
+			}))
 			socket.emit('updaterooms', rooms);
 		}
 	})
