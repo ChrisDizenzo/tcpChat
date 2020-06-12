@@ -49,12 +49,12 @@ io.on('connection', (socket) => {
 
 		var into = ' ('
 		var values = '('
-		Object.keys(queryParameter).forEach((o)=>{
+		Object.keys(data).forEach((o)=>{
 			into+=o+','
 			if (o.search('id') > 0){
-				values += queryParameter[o] + ','
+				values += data[o] + ','
 			}else{
-				values += '\''+ queryParameter[o] + '\','
+				values += '\''+ data[o] + '\','
 			}
 		})
 		into = into.slice(0,-1) + ')'
