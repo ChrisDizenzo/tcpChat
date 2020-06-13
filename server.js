@@ -108,10 +108,9 @@ io.on('connection', (socket) => {
 		client.query(commentInsertQuery({message: data.text, consumer_id: data.consumer_id, chat_id: socket.chat_id,color: data.color}),(err,result) =>{
 			if (err){
 				console.log(err)
-			}else{
-				io.sockets.in(socket.room).emit('updatechat', result.rows);
 			}
 		})
+		io.sockets.in(socket.room).emit('updatechat', result.rows);
 	});
 	
 	socket.on('switchRoom', (newroom) => {
@@ -222,19 +221,7 @@ commentInsertQuery = function(data){
 	return q
 }
 chatInsertQuery = function(newroom){
-	var into = ' ('
-	var values = '('
-	Object.keys(data).forEach((o)=>{
-		into+=o+','
-		if (o.search('id') > 0){
-			values += data[o] + ','
-		}else{
-			values += '\''+ data[o] + '\','
-		}
-	})
-	into = into.slice(0,-1) + ')'
-	values = values.slice(0,-1) + ')'
-	q = "INSERT INTO chat (name) VALUES (\'" + values + "\')";
+	q = "INSERT INTO chat (name) VALUES (\'" + newroom + "\')";
 	console.log(q)
 	return q
 }
