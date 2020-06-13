@@ -109,10 +109,10 @@ io.on('connection', (socket) => {
 			if (err){
 				console.log(err)
 			}else{
-				temp.time_created = moment()
-				io.sockets.in(socket.room).emit('updatechat', temp);
 			}
 		})
+		temp.time_created = moment()
+		io.sockets.in(socket.room).emit('updatechat', temp);
 	});
 	
 	socket.on('switchRoom', (newroom) => {
