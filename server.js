@@ -111,7 +111,7 @@ io.on('connection', (socket) => {
 			}
 		})
 		temp.time_created = moment()
-		io.sockets.in(socket.room).emit('updatechat', [temp]);
+		socket.broadcast.to(socket.room).emit('updatechat', [temp]);
 	});
 	
 	socket.on('switchRoom', (newroom) => {
