@@ -134,25 +134,27 @@ io.on('connection', (socket) => {
 		socket.room = newroom;
 		socket.broadcast.to(newroom).emit('updatechat', [{text: String(socket.display_name + " has just Joined!"), color: 'bg-blue-500', time: moment()}]);
 
-		client.query(chatQuery(newroom),(err, result)=>{
-			if (err){
-				console.log(err)
-			}else{
-				socket.chat_id = result.rows[0].chat_id
-			}
-		})
+		if (newroom != 'Home'){
+			client.query(chatQuery(newroom),(err, result)=>{
+				if (err){
+					console.log(err)
+				}else{
+					socket.chat_id = result.rows[0].chat_id
+				}
+			})
 
-		var temp = {
-			limit: 20,
-			newroom: newroom
-		}
-		client.query(chatPullQuery(temp),(err, result)=>{
-			if (err){
-				console.log(err)
-			}else{
-				socket.emit('updatechat' , result.rows)
+			var temp = {
+				limit: 20,
+				newroom: newroom
 			}
-		})
+			client.query(chatPullQuery(temp),(err, result)=>{
+				if (err){
+					console.log(err)
+				}else{
+					socket.emit('updatechat' , result.rows)
+				}
+			})
+		}
 		socket.emit('updaterooms', rooms);
 	})
 
