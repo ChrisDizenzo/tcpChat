@@ -104,11 +104,10 @@ io.on('connection', (socket) => {
 	socket.on('sendChat', function (data) {
 		console.log(socket.display_name + " said to room " + socket.room + ": " + data)
 		// we tell the client to execute 'updatechat' with 2 parameters
-		var temp = {message: data.text, consumer_id: data.consumer_id, chat_id: socket.chat_id,color: data.color}
+		var temp = {message: data.message, consumer_id: data.consumer_id, chat_id: socket.chat_id,color: data.color}
 		client.query(commentInsertQuery(temp),(err,result) =>{
 			if (err){
 				console.log(err)
-			}else{
 			}
 		})
 		temp.time_created = moment()
